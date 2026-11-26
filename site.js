@@ -106,7 +106,7 @@ function answerFor(question) {
   if (/项目|作品|案例|做过|portfolio|project/i.test(question)) {
     return hasProjects ? profile.projects.map((item) => `${item.title} · ${item.summary}`).join("\n") : "项目案例待补充。本站已经预留了跨境产品开发与跨境运营的展示位置。";
   }
-  if (/经历|简历|履历|工作过|公司|resume|experience/i.test(question)) {
+  if (/经历|实习|简历|履历|工作过|公司|resume|experience/i.test(question)) {
     return profile.experience.map((item) => [item.period, item.title, item.summary].filter(Boolean).join(" · ")).join("\n") || "工作经历和简历待补充。";
   }
   if (/介绍|名字|姓名|是谁|你好|做什么|方向|职业|负责|跨境|开发|运营|about|name|hello/i.test(question)) {
