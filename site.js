@@ -48,16 +48,17 @@ function projectCard(project) {
   art.append(el("span", "card-number", project.metric), el("span", "card-art-label", project.metricLabel));
   const copy = el("span", "card-copy");
   const footer = el("span", "card-footer");
-  footer.append(el("span", "", "华运国际物流 · 实习实践"), el("strong", "", "展开详情"));
+  footer.append(el("span", "", (project.company || "华运国际物流") + " · 实习实践"), el("strong", "", "展开详情"));
   copy.append(el("span", "card-category", project.category), el("span", "card-title", project.title), el("span", "card-subtitle", project.subtitle), el("span", "card-summary", project.summary), footer);
   card.append(art, copy);
   card.addEventListener("click", () => openProject(project));
   return card;
 }
 profile.projects.forEach(project => {
-  $("#home-projects").append(projectCard(project));
   $("#project-grid").append(projectCard(project));
 });
+profile.projects.slice(0, 3).forEach(project => $("#home-projects").append(projectCard(project)));
+$("#practice-count").textContent = profile.experience.length + " 段实习 · " + profile.projects.length + " 项实践";
 function filterProjects(category) {
   let count = 0;
   $$("#project-grid .project-card").forEach(card => {
@@ -84,6 +85,7 @@ projectDialog.addEventListener("click", event => {
 profile.experience.forEach(item => {
   const article = el("article", "experience-item");
   article.append(el("p", "experience-period", item.period), el("h3", "", item.company), el("p", "experience-role", item.role));
+  if (item.companySize) article.append(el("p", "experience-company-size", "公司规模：" + item.companySize));
   const list = el("ul", "experience-highlights");
   item.highlights.forEach(highlight => {
     const row = el("li");
@@ -120,7 +122,7 @@ async function copyContact(value, label) {
 function resumeText() {
   const lines = [profile.name + " · " + profile.role, [profile.gender, profile.age + "岁", profile.phone, profile.email].join(" · "), "", "个人介绍", profile.bio, "", "实习经历"];
   profile.experience.forEach(item => {
-    lines.push(item.period + " | " + item.company + " | " + item.role);
+    lines.push(experienceHeading(item));
     item.highlights.forEach(part => lines.push("• " + part.title + "：" + part.text));
     lines.push("");
   });
@@ -160,8 +162,11 @@ function resetChat() {
   welcome.append(el("span", "welcome-symbol", "✳"), el("h2", "", "你好，我是" + profile.name + "。"), el("p", "", "你可以问我做过哪些工作、用过什么工具，或从一段实习经历开始了解我。"));
   chatLog.replaceChildren(welcome);
 }
-function experienceAnswer() {
-  return profile.experience.map(item => [item.period + " · " + item.company + " · " + item.role, ...item.highlights.map(part => part.title + "：" + part.text)].join("\n\n")).join("\n\n");
+function experienceHeading(item) {
+  return [item.period, item.company, item.companySize && "公司规模：" + item.companySize, item.role].filter(Boolean).join(" · ");
+}
+function experienceAnswer(experiences = profile.experience) {
+  return experiences.map(item => [experienceHeading(item), ...item.highlights.map(part => part.title + "：" + part.text)].join("\n\n")).join("\n\n");
 }
 function answerFor(question) {
   const answers = [];
@@ -171,30 +176,37 @@ function answerFor(question) {
   if (/联系|联络|电话|手机|邮箱|邮件|号码|合作|contact|email|phone/.test(text)) {
     include("欢迎通过以下方式联系我：\n电话：" + profile.phone + "\n邮箱：" + profile.email, "about");
   }
-  if (/年龄|几岁|多大|性别|\bage\b|\bgender\b/.test(text)) {
+  if (/年龄|几岁|性别|\bage\b|\bgender\b/.test(text) || (/多大/.test(text) && !/公司|规模|团队/.test(text))) {
     include([profile.name, profile.gender, profile.age + "岁"].join("，") + "。", "about");
   }
   const categories = [];
+  if (/选品|开品|开发|新品|立项|核算|利润率|回本|采购|打样|包装|样品|差异化|60|agent|品类趋势|差评|痛点|竞品分析/.test(text)) categories.push("development");
   if (/listing|a\+|本地化|文案|sku|产品信息/.test(text)) categories.push("listing");
   if (/竞品|关键词|卖家精灵|asin|bsr/.test(text)) categories.push("research");
   if (/库存|fba|海外仓|erp|订单|发货|履约/.test(text)) categories.push("inventory");
-  if (categories.length) {
+  const companyMatches = profile.experience.filter(item =>
+    (text.includes("欧品会") && item.company.includes("欧品会")) ||
+    (text.includes("华运") && item.company.includes("华运"))
+  );
+  if (companyMatches.length) {
+    include(experienceAnswer(companyMatches), "about");
+  } else if (categories.length) {
     categories.forEach(id => {
       const project = profile.projects.find(item => item.id === id);
-      include(project.subtitle + "\n\n" + project.sections.map(item => item.title + "：" + item.text).join("\n\n"), "projects");
+      include(project.subtitle + "\n" + project.context + "\n\n" + project.sections.map(item => item.title + "：" + item.text).join("\n\n"), "projects");
     });
   } else if (/实习|经历|简历|履历|工作过|公司|experience|resume/.test(text)) {
     include(experienceAnswer(), "about");
   } else if (/实践|项目|作品|案例|做过|portfolio|project/.test(text)) {
-    include("以下三项实践来自我在华运国际物流的同一段运营实习：\n\n" + profile.projects.map(item => item.subtitle + "\n" + item.summary).join("\n\n") + "\n\n可以在“实习与实践”页面展开每项工作的详情。", "projects");
+    include("以下实践整理自我在欧品会科技与华运国际物流的两段实习：\n\n" + profile.projects.map(item => item.subtitle + "\n" + item.context + "\n" + item.summary).join("\n\n") + "\n\n可以在“实习与实践”页面展开每项工作的详情。", "projects");
   } else if (/技能|工具|擅长|能力|skill|tools/.test(text)) {
-    include("我在实习中使用或接触的工具与方法包括：\n" + profile.skills.join("、") + "。\n\n具体工作覆盖内容优化、关键词与竞品监控，以及发货和库存管理。", "about");
+    include("我在两段实习中使用或接触的工具与方法包括：\n" + profile.skills.join("、") + "。\n\n具体工作覆盖选品开发、竞品分析、新品立项与核算、跨部门协同，以及内容优化、发货和库存管理。", "about");
   } else if (!answers.length && /介绍|你好|名字|姓名|是谁|做什么|方向|职业|负责|跨境|开发|运营|about|name|hello|hi\b/.test(text)) {
     include(profile.bio, "about");
   }
   return answers.length
     ? {text:answers.join("\n\n"), sources}
-    : {text:"目前公开资料还没有覆盖这个问题。你可以问我个人介绍、实习经历、Listing 优化、竞品监控、库存管理或联系方式。", sources:[]};
+    : {text:"目前公开资料还没有覆盖这个问题。你可以问我个人介绍、两段实习、选品开发、新品成本核算、Listing 优化、库存管理或联系方式。", sources:[]};
 }
 function ask(raw) {
   const question = raw.trim().slice(0, 400);

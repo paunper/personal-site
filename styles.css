@@ -184,6 +184,8 @@ h1:focus, #main:focus { outline: none; }
 .experience-period { font-family: "Consolas",monospace; font-size: .875rem; color: #6b8070; }
 .experience-item h3 { font-size: 1.25rem; line-height: 1.75; letter-spacing: -.03em; margin-top: 11px; }
 .experience-role { color: #4e6655; margin-top: 9px; font-size: 1rem; }
+.experience-company-size { color: var(--muted); margin-top: 7px; font-size: .875rem; line-height: 1.8; }
+.experience-item + .experience-item { margin-top: 34px; }
 .experience-highlights { list-style: none; margin: 26px 0 0; padding: 0; }
 .experience-highlights li + li { margin-top: 25px; }
 .experience-highlights h4 { margin: 0 0 7px; font-size: 1rem; font-weight: 650; }
