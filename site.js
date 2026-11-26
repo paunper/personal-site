@@ -279,7 +279,7 @@ $$("[data-contact-link]").forEach(link => link.addEventListener("click", () => {
 }));
 
 const canvas = $("#orb-canvas");
-const context = canvas.getContext("2d");
+const context = canvas?.getContext("2d");
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
 let frame = 0;
 let previous = -Infinity;
@@ -319,7 +319,7 @@ function updateMotion() {
 }
 motion.addEventListener("change", updateMotion);
 document.addEventListener("visibilitychange", updateMotion);
-if ("IntersectionObserver" in window) new IntersectionObserver(entries => {
+if (canvas && "IntersectionObserver" in window) new IntersectionObserver(entries => {
   orbInView = entries[0].isIntersecting;
   updateMotion();
 }).observe(canvas);

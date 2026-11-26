@@ -65,6 +65,9 @@ h1:focus, #main:focus { outline: none; }
 .orbit-two { transform: rotate(42deg) scaleY(.75); border-color: #c0d0c5; }
 .orb { display: block; width: 67%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: radial-gradient(ellipse at 27% 25%, #afc8a9, #5a8267 34%, #2f5343 62%, #182e26 88%); box-shadow: 0 25px 40px #325a3f30, inset 0 0 22px #cae1be66; transform: rotate(-12deg); transition: transform .5s; }
 .identity-art:hover .orb { transform: rotate(-6deg) scale(1.04); }
+.portrait-scene { position: relative; display: grid; place-items: center; width: min(100%, 320px); min-height: 320px; margin: 10px auto 18px; }
+.portrait-frame { display: block; position: relative; z-index: 1; width: 210px; max-width: 85%; aspect-ratio: 3 / 4; overflow: hidden; border: 6px solid #fff; border-radius: 24px; background: #fff; box-shadow: 0 18px 38px #294a3330; }
+.portrait-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
 .orb canvas { width: 100%; height: 100%; }
 .orb-label { position: absolute; color: #6b8572; font: .65rem "Consolas",monospace; letter-spacing: .1em; background: #edf4ed; padding: 4px 7px; border: 1px solid #ccdacd; border-radius: 6px; }
 .label-one { left: -2%; top: 29%; }
@@ -164,6 +167,8 @@ h1:focus, #main:focus { outline: none; }
 .resume-profile,.experience-panel { padding: 30px; min-width: 0; }
 .profile-heading { display: flex; align-items: center; gap: 17px; }
 .small-avatar { width: 70px; height: 70px; border-radius: 20px; margin-bottom: 0; font-size: 29px; letter-spacing: -3px; flex-shrink: 0; }
+.photo-avatar { overflow: hidden; background: #fff; }
+.photo-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 14%; }
 .profile-heading h2 { font-size: 1.7rem; letter-spacing: -.04em; }
 .profile-heading p { margin-top: 6px; font-size: .875rem; color: var(--muted); }
 .resume-profile > .profile-role { margin-top: 23px; }
@@ -244,6 +249,8 @@ h1:focus, #main:focus { outline: none; }
   .hero-description { max-width: 580px; }
   .identity-art { min-height: 355px; width: 100%; padding: 22px 28px; }
   .orb-scene { width: 250px; margin-block: -10px; }
+  .portrait-scene { width: 260px; min-height: 275px; margin-block: 8px 14px; }
+  .portrait-frame { width: 180px; border-width: 5px; border-radius: 21px; }
   .art-bottom { padding-top: 13px; }
   .header-inner { min-height: 76px; grid-template-columns: auto 1fr; gap: 10px; }
   .main-nav { justify-self: end; gap: 2px; }
