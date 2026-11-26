@@ -28,6 +28,9 @@ if (name) {
   document.querySelectorAll("[data-brand]").forEach((node) => { node.textContent = name; });
 }
 if (profile.role) select("#role").textContent = profile.role;
+const personalDetails = [profile.gender, profile.age && `${profile.age}岁`].filter(Boolean).join(" · ");
+select("#personal-meta").textContent = personalDetails;
+select("#personal-meta").hidden = !personalDetails;
 if (profile.intro) select("#intro").textContent = profile.intro;
 select("#bio").textContent = profile.bio || profile.intro || "个人介绍待补充。";
 
@@ -94,6 +97,9 @@ const chatLog = select("#chat-log");
 const questionInput = select("#question");
 
 function answerFor(question) {
+  if (/年龄|几岁|性别|多大|男生|女生|\bage\b|\bgender\b/i.test(question)) {
+    return [name, profile.gender, profile.age && `${profile.age}岁`].filter(Boolean).join("，") + "。";
+  }
   if (/联络|联系|电话|手机|邮箱|邮件|号码|合作|contact|email|phone/i.test(question)) {
     return [phone && `电话 ${phone}`, email && `邮箱 ${email}`].filter(Boolean).join("\n") || "联系方式待补充。";
   }

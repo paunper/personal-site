@@ -42,6 +42,7 @@ h1, h2 { font-family: var(--serif); }
 h1 { font-size: clamp(57px, 7vw, 106px); font-weight: 750; line-height: 1.08; letter-spacing: -.09em; }
 h1 [data-name] { overflow-wrap: anywhere; }
 .period { color: var(--accent); font-family: Georgia, serif; margin-left: .08em; }
+.personal-meta { margin-top: 18px; color: var(--muted); font-size: 1rem; line-height: 1.8; }
 .hero-description { line-height: 1.95; margin-top: 28px; color: var(--muted); max-width: 355px; font-size: 15px; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 26px; margin-top: 28px; }
 .primary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; color: #fffaf5; background: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 12px 19px; font-size: 14px; font-weight: 620; }
